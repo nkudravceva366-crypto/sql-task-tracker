@@ -151,3 +151,101 @@ from routes r
 join airports_data a
     on r.arrival_airport = a.airport_code
 order by city;
+
+
+-- Task 15
+-- Count of flights in each status
+
+select
+    status,
+    count(*) as flights_count
+from flights
+group by status
+order by flights_count desc;
+
+
+-- Task 16
+-- Top 5 fastest aircraft
+
+select
+    airplane_code,
+    model ->> 'ru' as model_ru,
+    speed
+from airplanes
+order by speed desc, model_ru asc
+limit 5;
+
+
+-- Task 17
+-- Total cost of all sold tickets through bookings
+
+select
+    sum(total_amount) as total_revenue
+from bookings;
+
+
+-- Task 18
+-- Passenger name and document by ticket number
+
+select
+    passenger_name,
+    passenger_id
+from tickets
+where ticket_no = '0005432000284';
+
+
+-- Task 19
+-- All possible fare_conditions from seats
+
+select distinct
+    fare_conditions
+from seats
+order by fare_conditions;
+
+
+-- Task 20
+-- Airports with timezone = Europe/Moscow
+
+select
+    airport_code,
+    airport_name ->> 'ru' as name,
+    city ->> 'ru' as city
+from airports_data
+where timezone = 'Europe/Moscow'
+order by airport_code;
+
+
+-- Task 21
+-- All tickets and passenger names in booking KOS1KJ
+
+select
+    ticket_no,
+    passenger_name
+from tickets
+where book_ref = 'KOS1KJ'
+order by ticket_no;
+
+
+-- Task 22
+-- Top 5 routes with the greatest duration
+
+select
+    route_no,
+    departure_airport,
+    arrival_airport,
+    duration
+from routes
+order by duration desc, route_no desc
+limit 5;
+
+
+-- Task 23
+-- Top 12 airports by number of outgoing routes
+
+select
+    departure_airport,
+    count(*) as routes_count
+from routes
+group by departure_airport
+order by routes_count desc
+limit 12;
