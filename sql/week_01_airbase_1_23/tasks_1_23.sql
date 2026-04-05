@@ -77,3 +77,77 @@ select
     model->>'ru' as model_ru
 from airplanes_data
 where model->>'ru' like '%Боинг%';
+
+
+-- Task 8
+-- First and last booking date
+
+select
+    min(book_date) as first_booking,
+    max(book_date) as last_booking
+from bookings;
+
+
+-- Task 9
+-- Number of airports in each time zone
+
+select
+    timezone,
+    count(*) as airport_count
+from airports_data
+group by timezone
+order by airport_count desc;
+
+
+-- Task 10
+-- Passengers whose names are shorter than 7 characters
+
+select
+    passenger_name,
+    passenger_id
+from tickets
+where char_length(passenger_name) < 7
+order by char_length(passenger_name), passenger_id
+limit 10;
+
+
+-- Task 11
+-- Average ticket price without class breakdown
+
+select
+    round(avg(price::numeric), 2) as average_ticket_price
+from segments;
+
+
+-- Task 12
+-- Average ticket price by fare class
+
+select
+    fare_conditions,
+    round(avg(price::numeric), 2) as average_price
+from segments
+group by fare_conditions
+order by average_price desc;
+
+
+-- Task 13
+-- Flights with revenue greater than 20,000,000
+
+select
+    flight_id,
+    sum(price) as revenue
+from segments
+group by flight_id
+having sum(price) > 20000000
+order by revenue desc;
+
+
+-- Task 14
+-- Destination cities without duplicates
+
+select distinct
+    a.city->>'ru' as city
+from routes r
+join airports_data a
+    on r.arrival_airport = a.airport_code
+order by city;
